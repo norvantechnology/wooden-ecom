@@ -20,7 +20,7 @@ export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [priceRange, setPriceRange] = useState([0, 2000]);
 
-  const categories = ['all', ...new Set(products.map(product => product.category))];
+  const categories = ['all', ...Array.from(new Set(products.map(product => product.category)))];
 
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
