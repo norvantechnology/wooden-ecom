@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { products } from './data';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -22,15 +22,30 @@ export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [priceRange, setPriceRange] = useState([0, 2000]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(0); // State for tracking window width
 
-  const categories = ['all', ...new Set(products.map(product => product.category))];
+  // Get unique categories
+  const categories = ['all', ...Array.from(new Set(products.map(product => product.category)))];
 
+  // Ensure window object is only accessed in the browser
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setWindowWidth(window.innerWidth);
+
+      const handleResize = () => setWindowWidth(window.innerWidth);
+      window.addEventListener('resize', handleResize);
+
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
+
+  // Filtered products based on search, category, and price range
   const filteredProducts = products.filter(product => {
     const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          product.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
     const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
-    
+
     return matchesSearch && matchesCategory && matchesPrice;
   });
 
@@ -49,7 +64,7 @@ export default function ProductsPage() {
           </p>
         </motion.div>
 
-        {/* Filter Toggle Button */}
+        {/* Filter Toggle Button (Mobile) */}
         <div className="mb-4">
           <Button
             variant="outline"
@@ -62,9 +77,9 @@ export default function ProductsPage() {
           </Button>
         </div>
 
-        {/* Filters */}
+        {/* Filters Section */}
         <AnimatePresence>
-          {(isFilterOpen || window.innerWidth >= 768) && (
+          {(isFilterOpen || windowWidth >= 768) && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
@@ -157,9 +172,7 @@ export default function ProductsPage() {
                     <span className="text-base sm:text-lg font-bold text-gray-900">
                       ${product.price.toLocaleString()}
                     </span>
-                    <Button 
-                      className="w-full sm:w-auto bg-amber-900 hover:bg-amber-800 text-xs sm:text-sm py-1 h-8"
-                    >
+                    <Button className="w-full sm:w-auto bg-amber-900 hover:bg-amber-800 text-xs sm:text-sm py-1 h-8">
                       View Details
                     </Button>
                   </div>
@@ -170,11 +183,7 @@ export default function ProductsPage() {
         </div>
 
         {filteredProducts.length === 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-12"
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-12">
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No products found</h3>
             <p className="text-gray-600">Try adjusting your filters or search criteria</p>
           </motion.div>
