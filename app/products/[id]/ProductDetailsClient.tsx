@@ -35,19 +35,16 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
   const { addToCart, favorites, toggleFavorite } = useStore();
   const isFavorite = favorites.some(f => f.id === product.id);
 
-  // Additional product images
   const productImages = [
     product.image,
     'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
     'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
   ];
 
-  // Get similar products (same category)
   const similarProducts = products
     .filter(p => p.category === product.category && p.id !== product.id)
     .slice(0, 3);
 
-  // Product features
   const features = [
     { icon: Tool, title: 'Handcrafted', description: 'Each piece is carefully handmade by skilled artisans' },
     { icon: Certificate, title: 'Quality Assured', description: '100% satisfaction guaranteed' },
@@ -85,24 +82,27 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen py-12">
+    <div className="bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Link 
-          href="/products"
-          className="inline-flex items-center text-amber-900 hover:text-amber-800 mb-8"
-        >
-          <ChevronLeft className="w-4 h-4 mr-2" />
-          Back to Products
-        </Link>
+        {/* Back Button - Sticky on mobile */}
+        <div className="sticky top-0 z-50 bg-gray-50 py-4 -mx-4 px-4 sm:static sm:py-8 sm:mx-0">
+          <Link 
+            href="/products"
+            className="inline-flex items-center text-amber-900 hover:text-amber-800"
+          >
+            <ChevronLeft className="w-4 h-4 mr-2" />
+            Back to Products
+          </Link>
+        </div>
 
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden mb-12">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-8">
             {/* Product Images */}
-            <div className="space-y-4 p-8">
+            <div className="space-y-4">
               <motion.div 
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="relative h-[500px] rounded-lg overflow-hidden"
+                className="relative h-[300px] sm:h-[400px] lg:h-[500px]"
               >
                 <Image
                   src={activeImage}
@@ -110,14 +110,14 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                   fill
                   className="object-cover"
                 />
-                <div className="absolute top-4 right-4 space-x-2">
+                <div className="absolute top-4 right-4 space-x-2 z-10">
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button
                           variant="outline"
                           size="icon"
-                          className="bg-white"
+                          className="bg-white/80 backdrop-blur-sm"
                           onClick={() => toggleFavorite(product)}
                         >
                           <Heart
@@ -139,7 +139,7 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                         <Button
                           variant="outline"
                           size="icon"
-                          className="bg-white"
+                          className="bg-white/80 backdrop-blur-sm"
                           onClick={handleShare}
                         >
                           <Share2 className="w-5 h-5 text-gray-600" />
@@ -155,13 +155,13 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                   Best Seller
                 </Badge>
               </motion.div>
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 px-4 sm:px-0">
                 {productImages.map((img, index) => (
                   <motion.button
                     key={index}
                     whileHover={{ scale: 1.05 }}
                     onClick={() => setActiveImage(img)}
-                    className={`relative h-24 rounded-lg overflow-hidden ${
+                    className={`relative h-20 sm:h-24 rounded-lg overflow-hidden ${
                       activeImage === img ? 'ring-2 ring-amber-900' : ''
                     }`}
                   >
@@ -177,35 +177,36 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
             </div>
 
             {/* Product Details */}
-            <div className="p-8">
+            <div className="p-4 sm:p-6 lg:p-8">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
+                className="space-y-6"
               >
-                <div className="text-sm text-amber-900 font-medium mb-2">
-                  {product.category}
-                </div>
-                <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                  {product.name}
-                </h1>
-                
-                {/* Rating */}
-                <div className="flex items-center mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
-                  ))}
-                  <span className="ml-2 text-gray-600">(50+ Reviews)</span>
+                <div>
+                  <div className="text-sm text-amber-900 font-medium mb-2">
+                    {product.category}
+                  </div>
+                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
+                    {product.name}
+                  </h1>
+                  
+                  <div className="flex items-center mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                    ))}
+                    <span className="ml-2 text-sm text-gray-600">(50+ Reviews)</span>
+                  </div>
+
+                  <p className="text-2xl font-bold text-gray-900 mb-4">
+                    ${product.price.toLocaleString()}
+                  </p>
                 </div>
 
-                <p className="text-2xl font-bold text-gray-900 mb-4">
-                  ${product.price.toLocaleString()}
-                </p>
-
-                {/* Limited Time Offer */}
                 <motion.div 
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="bg-amber-50 p-4 rounded-lg mb-6"
+                  className="bg-amber-50 p-4 rounded-lg"
                 >
                   <div className="flex items-center text-amber-900">
                     <Gift className="w-5 h-5 mr-2" />
@@ -216,12 +217,11 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                   </p>
                 </motion.div>
 
-                <p className="text-gray-600 mb-6">
+                <p className="text-gray-600 text-sm sm:text-base">
                   {product.description}
                 </p>
 
-                {/* Key Features */}
-                <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="grid grid-cols-2 gap-3">
                   {features.map((feature, index) => (
                     <motion.div
                       key={index}
@@ -230,7 +230,7 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                       transition={{ delay: index * 0.1 }}
                       className="flex items-start p-3 bg-gray-50 rounded-lg"
                     >
-                      <feature.icon className="w-5 h-5 text-amber-900 mt-1" />
+                      <feature.icon className="w-4 h-4 sm:w-5 sm:h-5 text-amber-900 mt-1 flex-shrink-0" />
                       <div className="ml-3">
                         <h4 className="text-sm font-medium text-gray-900">{feature.title}</h4>
                         <p className="text-xs text-gray-600">{feature.description}</p>
@@ -239,84 +239,83 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                   ))}
                 </div>
 
-                {/* Quantity Selector */}
-                <div className="mb-6">
-                  <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-2">
-                    Quantity
-                  </label>
-                  <div className="flex items-center space-x-4">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    >
-                      -
-                    </Button>
-                    <span className="text-lg font-medium">{quantity}</span>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => setQuantity(quantity + 1)}
-                    >
-                      +
-                    </Button>
+                <div className="space-y-4">
+                  <div>
+                    <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-2">
+                      Quantity
+                    </label>
+                    <div className="flex items-center space-x-4">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      >
+                        -
+                      </Button>
+                      <span className="text-lg font-medium">{quantity}</span>
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => setQuantity(quantity + 1)}
+                      >
+                        +
+                      </Button>
+                    </div>
                   </div>
-                </div>
 
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <Button 
-                    className="w-full bg-amber-900 hover:bg-amber-800 mb-6"
-                    onClick={handleAddToCart}
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    Add to Cart - ${(product.price * quantity).toLocaleString()}
-                  </Button>
-                </motion.div>
+                    <Button 
+                      className="w-full bg-amber-900 hover:bg-amber-800"
+                      onClick={handleAddToCart}
+                    >
+                      Add to Cart - ${(product.price * quantity).toLocaleString()}
+                    </Button>
+                  </motion.div>
+                </div>
 
-                {/* Shipping & Returns */}
-                <div className="grid grid-cols-2 gap-4 mb-8">
+                <div className="grid grid-cols-2 gap-3 text-sm">
                   <div className="flex items-start">
-                    <Truck className="w-5 h-5 text-amber-900 mt-1" />
+                    <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-amber-900 mt-1" />
                     <div className="ml-3">
-                      <h4 className="text-sm font-medium text-gray-900">Free Shipping</h4>
-                      <p className="text-sm text-gray-600">On orders over $999</p>
+                      <h4 className="font-medium text-gray-900">Free Shipping</h4>
+                      <p className="text-gray-600">On orders over $999</p>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <Shield className="w-5 h-5 text-amber-900 mt-1" />
+                    <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-amber-900 mt-1" />
                     <div className="ml-3">
-                      <h4 className="text-sm font-medium text-gray-900">Warranty</h4>
-                      <p className="text-sm text-gray-600">Lifetime guarantee</p>
+                      <h4 className="font-medium text-gray-900">Warranty</h4>
+                      <p className="text-gray-600">Lifetime guarantee</p>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <Clock className="w-5 h-5 text-amber-900 mt-1" />
+                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-amber-900 mt-1" />
                     <div className="ml-3">
-                      <h4 className="text-sm font-medium text-gray-900">Delivery</h4>
-                      <p className="text-sm text-gray-600">2-4 weeks</p>
+                      <h4 className="font-medium text-gray-900">Delivery</h4>
+                      <p className="text-gray-600">2-4 weeks</p>
                     </div>
                   </div>
                   <div className="flex items-start">
-                    <Ruler className="w-5 h-5 text-amber-900 mt-1" />
+                    <Ruler className="w-4 h-4 sm:w-5 sm:h-5 text-amber-900 mt-1" />
                     <div className="ml-3">
-                      <h4 className="text-sm font-medium text-gray-900">Custom Sizes</h4>
-                      <p className="text-sm text-gray-600">Available on request</p>
+                      <h4 className="font-medium text-gray-900">Custom Sizes</h4>
+                      <p className="text-gray-600">Available on request</p>
                     </div>
                   </div>
                 </div>
 
-                {/* Product Information Tabs */}
                 <Tabs defaultValue="details" className="w-full">
-                  <TabsList className="grid w-full grid-cols-4">
-                    <TabsTrigger value="details">Details</TabsTrigger>
-                    <TabsTrigger value="dimensions">Dimensions</TabsTrigger>
-                    <TabsTrigger value="features">Features</TabsTrigger>
-                    <TabsTrigger value="care">Care</TabsTrigger>
+                  <TabsList className="grid w-full grid-cols-4 h-auto">
+                    <TabsTrigger value="details" className="text-xs sm:text-sm py-2">Details</TabsTrigger>
+                    <TabsTrigger value="dimensions" className="text-xs sm:text-sm py-2">Dimensions</TabsTrigger>
+                    <TabsTrigger value="features" className="text-xs sm:text-sm py-2">Features</TabsTrigger>
+                    <TabsTrigger value="care" className="text-xs sm:text-sm py-2">Care</TabsTrigger>
                   </TabsList>
-                  <TabsContent value="details" className="mt-6">
-                    <dl className="grid grid-cols-1 gap-4">
+                  <TabsContent value="details" className="mt-4">
+                    <dl className="grid grid-cols-1 gap-3 text-sm">
                       <div>
                         <dt className="font-medium text-gray-900">Material</dt>
                         <dd className="text-gray-600">{product.details.material}</dd>
@@ -331,8 +330,8 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                       </div>
                     </dl>
                   </TabsContent>
-                  <TabsContent value="dimensions" className="mt-6">
-                    <div className="space-y-4">
+                  <TabsContent value="dimensions" className="mt-4">
+                    <div className="space-y-3 text-sm">
                       <h3 className="font-medium text-gray-900">Product Dimensions</h3>
                       <p className="text-gray-600">{product.details.dimensions}</p>
                       {product.details.seating && (
@@ -343,15 +342,15 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                       )}
                     </div>
                   </TabsContent>
-                  <TabsContent value="features" className="mt-6">
-                    <ul className="list-disc list-inside space-y-2">
+                  <TabsContent value="features" className="mt-4">
+                    <ul className="list-disc list-inside space-y-2 text-sm">
                       {product.details.features.map((feature, index) => (
                         <li key={index} className="text-gray-600">{feature}</li>
                       ))}
                     </ul>
                   </TabsContent>
-                  <TabsContent value="care" className="mt-6">
-                    <Accordion type="single" collapsible>
+                  <TabsContent value="care" className="mt-4">
+                    <Accordion type="single" collapsible className="text-sm">
                       <AccordionItem value="cleaning">
                         <AccordionTrigger>Cleaning Instructions</AccordionTrigger>
                         <AccordionContent>
@@ -379,9 +378,9 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
         </div>
 
         {/* Similar Products */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">You May Also Like</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="mt-12 mb-8">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">You May Also Like</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
             {similarProducts.map((similarProduct) => (
               <motion.div
                 key={similarProduct.id}
@@ -393,7 +392,7 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                   href={`/products/${similarProduct.id}`}
                   className="block bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-all duration-300"
                 >
-                  <div className="relative h-48">
+                  <div className="relative h-40 sm:h-48">
                     <Image
                       src={similarProduct.image}
                       alt={similarProduct.name}
@@ -402,10 +401,10 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                     />
                   </div>
                   <div className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2 line-clamp-1">
                       {similarProduct.name}
                     </h3>
-                    <p className="text-amber-900 font-bold">
+                    <p className="text-amber-900 font-bold text-sm sm:text-base">
                       ${similarProduct.price.toLocaleString()}
                     </p>
                   </div>
@@ -416,9 +415,9 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
         </div>
 
         {/* Customer Reviews */}
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Customer Reviews</h2>
-          <div className="grid gap-6">
+        <div className="mb-12">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">Customer Reviews</h2>
+          <div className="grid gap-4">
             {[
               {
                 name: "Sarah Johnson",
@@ -440,7 +439,7 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-lg shadow-md p-6"
+                className="bg-white rounded-lg shadow-md p-4 sm:p-6"
               >
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center">
@@ -449,16 +448,16 @@ export default function ProductDetailsClient({ product }: { product: Product }) 
                         <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                       ))}
                     </div>
-                    <span className="ml-2 text-sm text-gray-600">{review.date}</span>
+                    <span className="ml-2 text-xs sm:text-sm text-gray-600">{review.date}</span>
                   </div>
                   {review.verified && (
-                    <Badge variant="outline" className="text-green-600">
+                    <Badge variant="outline" className="text-green-600 text-xs">
                       Verified Purchase
                     </Badge>
                   )}
                 </div>
-                <p className="text-gray-800 mb-2">{review.comment}</p>
-                <p className="text-sm font-medium text-gray-900">{review.name}</p>
+                <p className="text-gray-800 text-sm sm:text-base mb-2">{review.comment}</p>
+                <p className="text-xs sm:text-sm font-medium text-gray-900">{review.name}</p>
               </motion.div>
             ))}
           </div>
