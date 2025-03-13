@@ -144,5 +144,68 @@ export const products: Product[] = [
         'Additional chairs available'
       ]
     }
+  },
+  {
+    id: 7,
+    name: 'Vintage Armchair',
+    category: 'Living Room',
+    price: 599,
+    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+    description: 'Timeless armchair with vintage-inspired design',
+    details: {
+      dimensions: '30"L x 32"W x 36"H',
+      material: 'Mahogany, Velvet Upholstery',
+      finish: 'Antique Wax',
+      weight: '50 lbs',
+      features: [
+        'Hand-carved mahogany frame',
+        'Plush velvet upholstery',
+        'Button-tufted backrest',
+        'Solid wood legs',
+        'Available in multiple colors'
+      ]
+    }
+  },
+  {
+    id: 8,
+    name: 'Industrial Side Table',
+    category: 'Living Room',
+    price: 199,
+    image: 'https://images.unsplash.com/photo-1604066818735-8d1c2f2a1b3e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+    description: 'Sleek industrial-style side table with metal accents',
+    details: {
+      dimensions: '18"L x 18"W x 24"H',
+      material: 'Steel, Reclaimed Wood',
+      finish: 'Powder Coat',
+      weight: '25 lbs',
+      features: [
+        'Reclaimed wood tabletop',
+        'Powder-coated steel frame',
+        'Minimalist design',
+        'Easy to assemble',
+        'Perfect for small spaces'
+      ]
+    }
+  },
+  {
+    id: 9,
+    name: 'Mid-Century Sofa',
+    category: 'Living Room',
+    price: 1299,
+    image: 'https://images.unsplash.com/photo-1567016432779-094069958ea5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+    description: 'Iconic mid-century modern sofa with walnut legs',
+    details: {
+      dimensions: '84"L x 32"W x 30"H',
+      material: 'Walnut, Premium Fabric',
+      finish: 'Matte Lacquer',
+      weight: '120 lbs',
+      features: [
+        'Solid walnut legs',
+        'High-resilience foam cushions',
+        'Removable upholstery',
+        'Timeless mid-century design',
+        'Available in multiple fabric options'
+      ]
+    }
   }
 ];
